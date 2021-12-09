@@ -1,25 +1,18 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useContext } from "react";
 
-function App() {
+import { ModalContext } from "./hooks";
+
+import Navbar from "./components/Navbar";
+
+import NavbarModal from "./components/Modal";
+const App = () => {
+  const { signupOpen, signInOpen } = useContext(ModalContext);
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+      <Navbar />
+      <div>{(signupOpen || signInOpen) && <NavbarModal />}</div>
+    </>
   );
-}
+};
 
 export default App;
