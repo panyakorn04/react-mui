@@ -21,30 +21,27 @@ const NavbarModal = () => {
 
   return (
     <>
-      {signupOpen && (
-        <Modal
-          open={signupOpen}
-          onClose={handleClose}
-          aria-labelledby="modal-modal-title"
-          aria-describedby="modal-modal-description"
-        >
-          <Box sx={style}>
-            <Signup />
-          </Box>
-        </Modal>
-      )}
-      {signInOpen && (
-        <Modal
-          open={signInOpen}
-          onClose={handleClose}
-          aria-labelledby="modal-modal-title"
-          aria-describedby="modal-modal-description"
-        >
-          <Box sx={style}>
-            <SignIn />
-          </Box>
-        </Modal>
-      )}
+      <Modal
+        open={signupOpen}
+        onClose={handleClose}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Box sx={style}>
+          <Signup />
+        </Box>
+      </Modal>
+
+      <Modal
+        open={signInOpen}
+        onClose={handleClose}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Box sx={style}>
+          <SignIn />
+        </Box>
+      </Modal>
     </>
   );
 };

@@ -2,14 +2,14 @@ import React, { useContext } from "react";
 
 import { ModalContext } from "./hooks";
 
-import Navbar from "./components/Navbar";
-
+import NavBar from "./components/Navbar";
 import NavbarModal from "./components/Modal";
+
 const App = () => {
   const { signupOpen, signInOpen } = useContext(ModalContext);
   return (
     <>
-      <Navbar />
+      <NavBar />
       <div>{(signupOpen || signInOpen) && <NavbarModal />}</div>
     </>
   );
