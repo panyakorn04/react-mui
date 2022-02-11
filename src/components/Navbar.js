@@ -1,4 +1,5 @@
-import React, { useContext, useState } from "react";
+import React, { useState } from "react";
+import { Link } from "react-router-dom";
 import { styled, alpha, useTheme } from "@mui/material/styles";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
@@ -28,8 +29,8 @@ import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import AvatarGroup from "@mui/material/AvatarGroup";
 import { deepPurple } from "@mui/material/colors";
-
-import { ModalContext } from "../hooks";
+import ListItemIcon from "@mui/material/ListItemIcon";
+import { Logout, Settings } from "@mui/icons-material/";
 
 const pages = ["Live คอร์ส", "แพ็กเกจสุดพิเศษ", "สมาชิกรายปี"];
 const settings = [
@@ -38,7 +39,8 @@ const settings = [
   "คอร์สของฉัน",
   "ออกจากระบบ",
 ];
-const dropdownMenu = [
+const menuDropdown = ["คอร์สเรียน"];
+const dropdownList = [
   "เทคโนโลยี",
   "ธุรกิจ",
   "ไลฟสไตล์",
@@ -137,10 +139,10 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 const DrawerHeader = styled("div")(({ theme }) => ({
   display: "flex",
   alignItems: "center",
-  padding: "0.4rem",
+
   // necessary for content to be below app bar
   ...theme.mixins.toolbar,
-  justifyContent: "flex-end",
+  justifyContent: "center",
 }));
 
 const NavBar = () => {
@@ -188,22 +190,33 @@ const NavBar = () => {
       onClick={toggleDrawer(anchor, false)}
       onKeyDown={toggleDrawer(anchor, false)}
     >
-      <List>
+      <List style={{ paddingTop: "4px" }}>
         <DrawerHeader>
           <img
             src={logo}
             alt="logo"
-            style={{ width: "40px", height: "36px", marginRight: "4.5rem" }}
+            style={{
+              width: "40px",
+              height: "36px",
+            }}
           />
-          <IconButton onClick={handleMenuClose}>
-            {theme.direction === "ltr" ? (
-              <ChevronLeftIcon />
-            ) : (
-              <ChevronRightIcon />
-            )}
-          </IconButton>
         </DrawerHeader>
         <Divider />
+        {menuDropdown.map((menuDropdown, index) => (
+          <ListItem button key={index}>
+            <ListItemText
+              primary={menuDropdown}
+              style={{ paddingLeft: "1.5rem" }}
+            />
+            <IconButton onClick={handleMenuClose}>
+              {theme.direction === "ltr" ? (
+                <ChevronRightIcon />
+              ) : (
+                <ChevronLeftIcon />
+              )}
+            </IconButton>
+          </ListItem>
+        ))}
         {pages.map((text, index) => (
           <ListItem button key={index}>
             <ListItemText primary={text} style={{ paddingLeft: "1.5rem" }} />
@@ -220,7 +233,24 @@ const NavBar = () => {
       </List>
     </Box>
   );
-
+  const dropdownId = "demo-customized-menu";
+  const dropdownMenu = (
+    <StyledMenu
+      id={dropdownId}
+      MenuListProps={{
+        "aria-labelledby": "demo-customized-button",
+      }}
+      anchorEl={anchorMenu}
+      open={isMenuOpen}
+      onClose={handleMenuClose}
+    >
+      {dropdownList.map((dropdownList) => (
+        <MenuItem key={dropdownList} onClick={handleMenuClose} disableRipple>
+          <Typography textAlign="center">{dropdownList}</Typography>
+        </MenuItem>
+      ))}
+    </StyledMenu>
+  );
   const menuId = "primary-search-account-menu";
   const renderMenu = (
     <StyledMenu
@@ -238,8 +268,11 @@ const NavBar = () => {
       open={isProfileOpen}
       onClose={handleMenuClose}
     >
-      {settings.map((setting) => (
-        <MenuItem key={setting} onClick={handleMenuClose}>
+      {settings.map((setting, index) => (
+        <MenuItem key={index} onClick={handleMenuClose}>
+          <ListItemIcon>
+            {index % 2 === 0 ? <Settings /> : <Logout />}
+          </ListItemIcon>
           <Typography textAlign="center">{setting}</Typography>
         </MenuItem>
       ))}
@@ -343,36 +376,20 @@ const NavBar = () => {
             />
           </Typography>
           <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
-            <Button
-              sx={{ my: 2, color: "white", display: "flex", ml: 2 }}
-              endIcon={<KeyboardArrowDownIcon />}
-              onClick={handleMenuClick}
-              aria-expanded={isMenuOpen ? "true" : undefined}
-              aria-controls="demo-customized-menu"
-              id="demo-customized-button"
-              aria-haspopup="true"
-            >
-              คอร์สเรียน
-            </Button>
-            <StyledMenu
-              id="demo-customized-menu"
-              MenuListProps={{
-                "aria-labelledby": "demo-customized-button",
-              }}
-              anchorEl={anchorMenu}
-              open={isMenuOpen}
-              onClose={handleMenuClose}
-            >
-              {dropdownMenu.map((dropdownMenu) => (
-                <MenuItem
-                  key={dropdownMenu}
-                  onClick={handleMenuClose}
-                  disableRipple
-                >
-                  <Typography textAlign="center">{dropdownMenu}</Typography>
-                </MenuItem>
-              ))}
-            </StyledMenu>
+            {menuDropdown.map((menuDropdown) => (
+              <Button
+                key={menuDropdown}
+                sx={{ my: 2, color: "white", display: "flex", ml: 2 }}
+                endIcon={<KeyboardArrowDownIcon />}
+                onClick={handleMenuClick}
+                aria-expanded={isMenuOpen ? "true" : undefined}
+                aria-controls="demo-customized-menu"
+                id="demo-customized-button"
+                aria-haspopup="true"
+              >
+                {menuDropdown}
+              </Button>
+            ))}
             {pages.map((page) => (
               <Button
                 key={page}
@@ -393,7 +410,20 @@ const NavBar = () => {
             />
           </Search>
           <Box sx={{ display: { xs: "flex", md: "flex" } }}>
-            <IconButton
+            <Button
+              component={Link}
+              to="/Signin"
+              sx={{ my: 2, color: "white", display: "block", ml: 2 }}
+            >
+              เข้าสู่ระบบ
+            </Button>
+            <Button
+              variant="contained"
+              sx={{ my: 2, color: "white", display: "block", ml: 2 }}
+            >
+              สมัคสมาชิก
+            </Button>
+            {/* <IconButton
               size="large"
               aria-label="show 4 new mails"
               color="inherit"
@@ -423,10 +453,11 @@ const NavBar = () => {
               <AvatarGroup>
                 <Avatar sx={{ bgcolor: deepPurple[500] }}>P</Avatar>
               </AvatarGroup>
-            </IconButton>
+            </IconButton> */}
           </Box>
         </Toolbar>
       </AppBar>
+      {dropdownMenu}
       {renderMobileMenu}
       {renderMenu}
     </Box>
